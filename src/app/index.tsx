@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
+import { Link } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { Link } from "expo-router";
 
-export default function Mapa2(){
+
+export default function Home(){
     const windowWidth = Dimensions.get("window").width;
     const windowHeight = Dimensions.get("window").height;
       
     const [currentLocation, setCurrentLocation] = useState(null);
     const [initialRegion, setInitialRegion] = useState(null);
+    const [permissionDenied, setPermissionDenied] = useState(false);
       
     useEffect(() => {
         const getLocation = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
+                setPermissionDenied(true);
                 console.log("Permissão de acesso à localização negada!");
                 return;
             }
@@ -40,9 +43,10 @@ export default function Mapa2(){
 
             {initialRegion && (
                 <MapView 
-                    style={{width:'100%', height:'90%'}} 
+                    style={{width:'90%', height:'90%'}} 
                     initialRegion={initialRegion} 
-                    showsUserLocation
+                    showsUserLocation={true}
+
                 >
                 
                     {currentLocation && (
