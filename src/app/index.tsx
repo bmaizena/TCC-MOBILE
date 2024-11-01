@@ -22,12 +22,57 @@ export default function Home() {
     const toggleMenu = () => setMenuVisible(!menuVisible);
     
     // Lista de pontos de ônibus
-    const busStops = [
-        { id: 1, name: "Ponto A", latitude: -23.556580, longitude: -46.662113 },
-        { id: 2, name: "Ponto B", latitude: -23.560073, longitude: -46.658555 },
-        { id: 3, name: "Ponto C", latitude: -23.562531, longitude: -46.663456 },
-        { id: 4, name: "Ponto D", latitude: -23.559082, longitude: -46.661222 }
-    ];
+    const [busStops, setBusStopList] = useState([
+        {
+            id: 1,
+            latitude: -24.703849,
+            longitude: -48.007183,
+            name: "Ponto 1",
+            description: "Ponto de Ônibus de teste rua sem saída"
+        },
+        {
+            id: 2,
+            latitude: -24.702543,
+            longitude: -48.006223,
+            name: "Ponto 2",
+            description: "Ponto de Ônibus de teste pracinha rodoviária"
+        },
+        {
+            id: 3,
+            latitude: -24.703250,
+            longitude: -48.005935,
+            name: "Ponto 3",
+            description: "Ponto de Ônibus próximo à entrada da escola"
+        },
+        {
+            id: 4,
+            latitude: -24.704568,
+            longitude: -48.006349,
+            name: "Ponto 4",
+            description: "Ponto de Ônibus em frente à pracinha"
+        },
+        {
+            id: 5,
+            latitude: -24.703861,
+            longitude: -48.008461,
+            name: "Ponto 5",
+            description: "Ponto de Ônibus ao lado da padaria"
+        },
+        {
+            id: 6,
+            latitude: -24.704549,
+            longitude: -48.003767,
+            name: "Ponto 6",
+            description: "Ponto de Ônibus na esquina da farmácia"
+        },
+        {
+            id: 7,
+            latitude: -24.704910,
+            longitude: -48.005283,
+            name: "Ponto 7",
+            description: "Ponto de Ônibus em frente ao supermercado"
+        }
+    ]);
     
     useEffect(() => {
         const getLocation = async () => {
@@ -56,8 +101,10 @@ export default function Home() {
     const searchBusStops = () => {
         const results = busStops.filter(stop =>
             stop.name.toLowerCase().includes(searchQuery.toLowerCase())
+            
         );
         setFilteredBusStops(results);
+        
 
         if (results.length > 0) {
             const { latitude, longitude } = results[0];
@@ -67,6 +114,7 @@ export default function Home() {
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.005,
             });
+            
         } else {
             alert("Nenhum ponto encontrado.");
         }
@@ -80,7 +128,11 @@ export default function Home() {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
         });
+        
         setShowBusStopList(false); // Fecha a lista após selecionar um ponto
+        setMenuVisible(!menuVisible);
+        
+        
     };
       
     return (
@@ -91,6 +143,8 @@ export default function Home() {
                 <MapView
                     style={{ flex: 1, width: '100%' }}
                     region={initialRegion}
+                    zoomEnabled={true}
+                    loadingEnabled={true}
                     showsUserLocation={true}
                     showsMyLocationButton={false}
                 >
@@ -103,13 +157,17 @@ export default function Home() {
                             title="Sua Localização"
                         />
                     )}
-                    {filteredBusStops.map(stop => (
-                        <Marker
-                            key={stop.id}
-                            coordinate={{ latitude: stop.latitude, longitude: stop.longitude }}
-                            title={stop.name}
-                        />
-                    ))}
+                    {busStops.map(stop => {
+                       return (
+                            <Marker
+                                
+                                key={stop.id}
+                                coordinate={{ latitude: stop.latitude, longitude: stop.longitude }}
+                                title={stop.name}
+                                description={stop.description}
+                            />
+                       );
+                    })}
                 </MapView>
             )}
             
