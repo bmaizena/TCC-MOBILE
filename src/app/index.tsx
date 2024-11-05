@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useApi} from '@/hook/useApi'
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -204,9 +205,9 @@ export default function Home() {
                             setMenuVisible(false);
                         }}
                     >
-                        <Link className="text-lg text-blue-500" href={'./login'}>Login</Link>
+                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/login'}>Login</Link>
 
-                        <Link className="text-lg text-blue-500" href={'./login'}>Contato</Link>
+                        <Link className="text-lg text-blue-500" href={'https://wa.me/5513991225846'}>Contato</Link>
                         
                         {/* Link para mostrar a lista de pontos de ônibus */}
                         <TouchableOpacity onPress={() => setShowBusStopList(!showBusStopList)} className="text-lg text-blue-500">
@@ -227,10 +228,12 @@ export default function Home() {
                                 />
                             </View>
                         )}
-                        <Link className="text-lg text-blue-500" href={'./login'}>Página Web</Link>
-                        </TouchableOpacity>
-                    </View>
-                    )}
+                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/'}>Página Web</Link>
+
+                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/cadastros/cadastro'}>Cadastro</Link>
+                    </TouchableOpacity>
+                </View>
+                )}
                         
             
             <View className="absolute bottom-0 left-0 right-0 bg-sky-100 flex-row justify-around items-center p-4 shadow-lg ">
