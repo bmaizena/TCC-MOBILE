@@ -173,7 +173,7 @@ export default function Home() {
             )}
             
             <View className="absolute top-12 left-16 right-4">
-                <View className="flex-row items-center bg-sky-100 rounded-full shadow-md px-4 py-2">
+                <View className="flex-row items-center bg-sky-100 rounded-full shadow-md px-4 py-1">
                     <TextInput
                         className="flex-1 text-base text-gray-700"
                         placeholder="Busque por um ponto de ônibus"
@@ -192,9 +192,9 @@ export default function Home() {
             {/* Botão de Menu Hambúrguer */}
             <TouchableOpacity
                 onPress={toggleMenu}
-                className="absolute top-12 left-4 bg-sky-100 p-2 rounded-full shadow-md"
+                className="absolute top-12 left-4 bg-sky-100 px-4 py-4 rounded-full shadow-md"
             >
-                <Text style={{ fontSize: 20 }}>☰</Text>
+                <Text style={{ fontSize: 15 }}>☰</Text>
             </TouchableOpacity>
 
             {/* Menu lateral */}
@@ -205,13 +205,13 @@ export default function Home() {
                             setMenuVisible(false);
                         }}
                     >
-                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/login'}>Login</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/login'}>Login</Link>
 
-                        <Link className="text-lg text-blue-500" href={'https://wa.me/5513991225846'}>Contato</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'https://wa.me/5513991225846'}>Contato</Link>
                         
                         {/* Link para mostrar a lista de pontos de ônibus */}
                         <TouchableOpacity onPress={() => setShowBusStopList(!showBusStopList)} className="text-lg text-blue-500">
-                            <Text className="text-lg text-blue-500">Ver lista de pontos</Text>
+                            <Text className="text-lg text-blue-500 p-1">Ver lista de pontos</Text>
                         </TouchableOpacity>
 
                         {/* Lista de pontos de ônibus */}
@@ -222,15 +222,15 @@ export default function Home() {
                                     keyExtractor={(item) => item.id.toString()}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity onPress={() => focusOnBusStop(item)} className="p-2 border-b border-gray-200">
-                                            <Text className="text-lg text-gray-700">{item.name}</Text>
+                                            <Text className="text-lg text-gray-700 ">{item.name}</Text>
                                         </TouchableOpacity>
                                     )}
                                 />
                             </View>
                         )}
-                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/'}>Página Web</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/'}>Página Web</Link>
 
-                        <Link className="text-lg text-blue-500" href={'http://192.168.86.33:8000/cadastros/cadastro'}>Cadastro</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/cadastros/cadastro'}>Cadastro</Link>
                     </TouchableOpacity>
                 </View>
                 )}
@@ -252,6 +252,8 @@ export default function Home() {
                     <Text className="text-xs text-gray-700">Contato</Text>
                 </TouchableOpacity>
             </View>
+            
         </View>
+        
     );
 }
