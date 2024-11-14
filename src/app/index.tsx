@@ -237,7 +237,7 @@ export default function Home() {
                         
             
             <View className="absolute bottom-0 left-0 right-0 bg-sky-100 flex-row justify-around items-center p-4 shadow-lg ">
-                <TouchableOpacity onPress={() => alert('Saldo')} className="items-center">
+                <TouchableOpacity onPress={() => alert('R$9,45')} className="items-center">
                     <Icon name="account-balance-wallet" size={24} color="#4A90E2" />
                     <Text className="text-xs text-gray-700">Saldo</Text>
                 </TouchableOpacity>
