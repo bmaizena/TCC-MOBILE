@@ -247,9 +247,9 @@ export default function Home() {
                     <Text className="text-xs text-gray-700">Pontos Salvos</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => alert('Contato')} className="items-center">
+                <TouchableOpacity className="items-center">
                     <Icon name="contact-mail" size={24} color="#4A90E2" />
-                    <Text className="text-xs text-gray-700">Contato</Text>
+                    <Link href={'https://wa.me/5513991225846'}>Contato</Link>
                 </TouchableOpacity>
             </View>
             
