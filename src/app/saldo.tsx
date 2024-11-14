@@ -1,54 +1,48 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, StatusBar } from 'react-native';
 
-
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    if (email === '' || password === '') {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
-    } else {
-      Alert.alert('Sucesso', `Email: ${email}\nSenha: ${password}`);
-    }
-  };
-
+const SaldoPage = () => {
   return (
-    
-      <View className="flex-1 justify-center items-center bg-gray-100 p-6">
-        <Text className="text-4xl font-bold text-blue-600 mb-10">Login</Text>
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
+        
+        {/* Saldo Atual */}
+        <View className="bg-white p-6 mt-6 rounded-lg shadow-md mb-5">
+          <Text className="text-gray-600 text-lg">Saldo Atual</Text>
+          <Text className="text-3xl font-bold text-green-600 mt-2">R$ 25,00</Text>
+        </View>
 
-        {/* Campo de Email */}
-        <TextInput
-          className="border border-gray-300 rounded-lg w-full p-4 mb-4 bg-white"
-          placeholder="Digite seu e-mail"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        {/* Formas de Pagamento */}
+        <View className="bg-white p-6 rounded-lg shadow-md mb-5">
+          <Text className="text-gray-600 text-lg mb-4">Formas de Pagamento</Text>
+          
+          <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mb-3">
+            <Text className="text-white text-center">Cartão de Crédito</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mb-3">
+            <Text className="text-white text-center">Pix</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity className="bg-blue-500 p-4 rounded-lg">
+            <Text className="text-white text-center">Boleto Bancário</Text>
+          </TouchableOpacity>
+        </View>
 
-        {/* Campo de Senha */}
-        <TextInput
-          className="border border-gray-300 rounded-lg w-full p-4 mb-6 bg-white"
-          placeholder="Digite sua senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-          autoCapitalize="none"
-        />
-
-        {/* Botão de Login */}
-        <TouchableOpacity className="bg-blue-500 p-4 rounded-lg w-full" onPress={handleLogin}>
-          <Text className="text-white text-center text-lg">Entrar</Text>
-        </TouchableOpacity>
-
-        {/* Esqueceu a Senha */}
-        <TouchableOpacity className="mt-4" onPress={() => Alert.alert('Esqueceu a senha', 'Link para recuperar senha')}>
-          <Text className="text-blue-500">Esqueceu sua senha?</Text>
-        </TouchableOpacity>
-      </View>
-    
+        {/* Reabastecer Passe Mensal */}
+        <View className="bg-white p-6 rounded-lg shadow-md">
+          <Text className="text-gray-600 text-lg mb-4">Reabastecer Passe Mensal</Text>
+          
+          <TouchableOpacity className="bg-green-500 p-4 rounded-lg">
+            <Text className="text-white text-center text-lg font-semibold">
+              Recarregar Passe Mensal
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-}
+};
+
+export default SaldoPage;
