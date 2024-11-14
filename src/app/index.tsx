@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useApi} from '@/hook/useApi'
+
 
 import { useNavigation } from '@react-navigation/native';
 
