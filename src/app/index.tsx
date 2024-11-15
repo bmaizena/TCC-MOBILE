@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dimensions, StatusBar, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
+import { Dimensions, StatusBar, Text, TextInput, TouchableOpacity, View, FlatList, Animated } from "react-native";
 import { Link } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -15,6 +15,10 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredBusStops, setFilteredBusStops] = useState([]);
     const [showBusStopList, setShowBusStopList] = useState(false); // Estado para exibir a lista de pontos
+    const [bottomSheetHeight] = useState(new Animated.Value(0)); // Altura da aba inferior
+    const [selectedBusStop, setSelectedBusStop] = useState(null); // Ponto de ônibus selecionado
+    const [showSavedStops, setShowSavedStops] = useState(false); // Exibir pontos salvos ou não
+    const [savedBusStops, setSavedBusStops] = useState([]); // Lista de pontos salvos
     
 
     const [menuVisible, setMenuVisible] = useState(false);
@@ -29,49 +33,77 @@ export default function Home() {
             latitude: -24.703849,
             longitude: -48.007183,
             name: "Ponto 1",
-            description: "Ponto de Ônibus de teste rua sem saída"
+            description: "Ponto de Ônibus de teste rua sem saída",
+            arrivalPrediction: "3 minutos",
+            departurePrediction: "5 minutos",
+            schedules: ["6:00", "6:30", "7:00", "7:30"],
+            fare: "R$ 14,50"
         },
         {
             id: 2,
             latitude: -24.702543,
             longitude: -48.006223,
             name: "Ponto 2",
-            description: "Ponto de Ônibus de teste pracinha rodoviária"
+            description: "Ponto de Ônibus de teste pracinha rodoviária",
+            arrivalPrediction: "5 minutos",
+            departurePrediction: "7 minutos",
+            schedules: ["6:15", "6:45", "7:15", "8:45"],
+            fare: "R$ 5,50"
         },
         {
             id: 3,
             latitude: -24.703250,
             longitude: -48.005935,
             name: "Ponto 3",
-            description: "Ponto de Ônibus próximo à entrada da escola"
+            description: "Ponto de Ônibus próximo à entrada da escola",
+            arrivalPrediction: "2 minutos",
+            departurePrediction: "4 minutos",
+            schedules: ["14:05", "19:35", "20:05", "21:35"],
+            fare: "R$ 5,00"
         },
         {
             id: 4,
             latitude: -24.704568,
             longitude: -48.006349,
             name: "Ponto 4",
-            description: "Ponto de Ônibus em frente à pracinha"
+            description: "Ponto de Ônibus em frente à pracinha",
+            arrivalPrediction: "3 minutos",
+            departurePrediction: "8 minutos",
+            schedules: ["6:10", "6:35", "8:00", "7:30"],
+            fare: "R$ 4,50"
         },
         {
             id: 5,
             latitude: -24.703861,
             longitude: -48.008461,
             name: "Ponto 5",
-            description: "Ponto de Ônibus ao lado da padaria"
+            description: "Ponto de Ônibus ao lado da padaria",
+            arrivalPrediction: "3 minutos",
+            departurePrediction: "7 minutos",
+            schedules: ["16:00", "16:30", "17:00", "7:35"],
+            fare: "R$ 4,00"
         },
         {
             id: 6,
             latitude: -24.704549,
             longitude: -48.003767,
             name: "Ponto 6",
-            description: "Ponto de Ônibus na esquina da farmácia"
+            description: "Ponto de Ônibus na esquina da farmácia",
+            arrivalPrediction: "12 minutos",
+            departurePrediction: "2 minutos",
+            schedules: ["10:00", "12:30", "14:00", "17:30"],
+            fare: "R$ 3,50"
         },
         {
             id: 7,
             latitude: -24.704910,
             longitude: -48.005283,
             name: "Ponto 7",
-            description: "Ponto de Ônibus em frente ao supermercado"
+            description: "Ponto de Ônibus em frente ao supermercado",
+            arrivalPrediction: "3 minutos",
+            departurePrediction: "5 minutos",
+            schedules: ["15:00", "16:30", "17:40", "18:30"],
+            fare: "R$ 2,50"
         }
     ]);
     
@@ -121,6 +153,50 @@ export default function Home() {
         }
     };
 
+    // Exibe ou oculta a aba inferior com os pontos salvos
+    const toggleSavedStopsSheet = () => {
+        if (showSavedStops) {
+            // Fecha a aba de pontos salvos
+            setShowSavedStops(false);
+        } else {
+            // Mostra a aba de pontos salvos e esconde a aba de informações do ponto
+            setShowSavedStops(true);
+            setSelectedBusStop(null);
+        }
+        Animated.timing(bottomSheetHeight, {
+            toValue: showSavedStops ? 0 : 300, // Mostra a aba (300px) ou oculta (0px)
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    // Exibe ou oculta a aba inferior com informações do ponto
+    const toggleBottomSheet = (busStop) => {
+        if (busStop) {
+            // Mostra a aba de informações do ponto e esconde a de pontos salvos
+            setSelectedBusStop(busStop);
+            setShowSavedStops(false);
+        } else {
+            // Fecha a aba de informações do ponto
+            setSelectedBusStop(null);
+        }
+        Animated.timing(bottomSheetHeight, {
+            toValue: busStop ? 455 : 0, // Define a altura da aba (350px ou 0)
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const saveBusStop = () => {
+        // Verifica se o ponto já está salvo
+        if (!savedBusStops.some(stop => stop.id === selectedBusStop.id)) {
+            setSavedBusStops([...savedBusStops, selectedBusStop]);
+            alert("Ponto salvo com sucesso!");
+        } else {
+            alert("Esse ponto já está salvo.");
+        }
+    };
+
     // Função para focar em um ponto específico no mapa ao clicar na lista
     const focusOnBusStop = (busStop) => {
         setInitialRegion({
@@ -164,8 +240,8 @@ export default function Home() {
                                 
                                 key={stop.id}
                                 coordinate={{ latitude: stop.latitude, longitude: stop.longitude }}
-                                title={stop.name}
-                                description={stop.description}
+                                onPress={() => toggleBottomSheet(stop)}
+                                
                             />
                        );
                     })}
@@ -221,7 +297,7 @@ export default function Home() {
                                     data={busStops}
                                     keyExtractor={(item) => item.id.toString()}
                                     renderItem={({ item }) => (
-                                        <TouchableOpacity onPress={() => focusOnBusStop(item)} className="p-2 border-b border-gray-200">
+                                        <TouchableOpacity onPress={() => {focusOnBusStop(item); toggleBottomSheet(item);}} className="p-2 border-b border-gray-200">
                                             <Text className="text-lg text-gray-700 ">{item.name}</Text>
                                         </TouchableOpacity>
                                     )}
@@ -235,6 +311,96 @@ export default function Home() {
                 </View>
                 )}
                         
+         {selectedBusStop && (
+            <Animated.View
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: bottomSheetHeight,
+                    backgroundColor: "#b6cddc",
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    padding: 16,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 5,
+                }}
+            >
+                <Text className="text-lg font-bold mb-2">{selectedBusStop.name}</Text>
+                <Text className="text-gray-600">{selectedBusStop.description}</Text>
+                <Text className="mt-4 font-semibold">Previsão de Chegada:</Text>
+                <Text className="text-gray-700">{selectedBusStop.arrivalPrediction}</Text>
+                <Text className="mt-4 font-semibold">Previsão de Saída:</Text>
+                <Text className="text-gray-700">{selectedBusStop.departurePrediction}</Text>
+                <Text className="mt-4 font-semibold">Horários:</Text>
+                <Text className="text-gray-700">{selectedBusStop.schedules.join(", ")}</Text>
+                <Text className="mt-4 font-semibold">Valor da Passagem:</Text>
+                <Text className="text-gray-700">{selectedBusStop.fare}</Text>
+
+                {/* Botão para salvar o ponto */}
+                <TouchableOpacity
+                    onPress={saveBusStop}
+                    className="mt-4 bg-blue-500 px-4 py-2 rounded-md"
+                >
+                    <Text className="text-white text-center">Salvar Ponto</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => toggleBottomSheet(null)}
+                    className="absolute top-4 right-4"
+                >
+                    <Icon name="close" size={24} color="#333" />
+                </TouchableOpacity>
+            </Animated.View>
+        )}
+
+        {showSavedStops && (
+            <Animated.View
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: bottomSheetHeight,
+                    backgroundColor: "#b6cddc",
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    padding: 16,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 5,
+                }}
+            >
+                <Text className="text-lg font-bold mb-2">Meus Pontos Salvos</Text>
+                {savedBusStops.length > 0 ? (
+                    <FlatList
+                        data={savedBusStops}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <View className="border-b border-gray-200 py-2">
+                                <Text className="text-gray-700 font-semibold">{item.name}</Text>
+                                <Text className="text-gray-500">{item.description}</Text>
+                            </View>
+                        )}
+                    />
+                ) : (
+                    <Text className="text-gray-600">Nenhum ponto salvo ainda.</Text>
+                )}
+                <TouchableOpacity
+                    onPress={toggleSavedStopsSheet}
+                    className="absolute top-4 right-4"
+                >
+                    <Icon name="close" size={24} color="#333" />
+                </TouchableOpacity>
+            </Animated.View>
+        )}
+
+        )}
+
             
             <View className="absolute bottom-0 left-0 right-0 bg-sky-100 flex-row justify-around items-center p-4 shadow-lg ">
                 <TouchableOpacity  className="items-center">
@@ -242,9 +408,9 @@ export default function Home() {
                     <Link href={'/saldo'}>Saldo</Link>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => alert('Rotas Salvas')} className="items-center">
+                <TouchableOpacity onPress={toggleSavedStopsSheet} className="items-center">
                     <Icon name="bookmark" size={24} color="#4A90E2" />
-                    <Text className="text-xs text-gray-700">Pontos Salvos</Text>
+                    <Text>Pontos Salvos</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity className="items-center">
@@ -252,6 +418,8 @@ export default function Home() {
                     <Link href={'https://wa.me/5513991225846'}>Contato</Link>
                 </TouchableOpacity>
             </View>
+            {/* Aba inferior */}
+            
             
         </View>
         
