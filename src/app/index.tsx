@@ -26,20 +26,30 @@ export default function Home() {
     const navigation = useNavigation();
 
     const toggleMenu = () => setMenuVisible(!menuVisible);
-    
+ 
     // Lista de pontos de ônibus
-    const [busStops, setBusStopList] = useState([]);
     const api = useApi();
-
-    async function getPontos(){
+    
+    async function getPontos() {
         const pontos = await api.listAll();
-        setBusStopList(pontos);
-    }
+        console.log(pontos);
 
+        // Convertendo latitude e longitude para números
+        const pontosConvertidos = pontos.map(stop => ({
+            ...stop,
+            latitude: parseFloat(stop.latitude),   // Converte latitude para número
+            longitude: parseFloat(stop.longitude), // Converte longitude para número
+        }));
+        setBusStopList(pontosConvertidos);  // Atualiza a lista com os pontos convertidos
+    }
+    
     useEffect(() => {
         getPontos();
     }, []);
-    
+
+
+    const [busStops, setBusStopList] = useState([]);
+
     useEffect(() => {
         const getLocation = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -237,9 +247,9 @@ export default function Home() {
                                 />
                             </View>
                         )}
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/'}>Página Web</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/'}>Página Web</Link>
 
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/cadastros/cadastro'}>Cadastro</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/cadastros/cadastro'}>Cadastro</Link>
                     </TouchableOpacity>
                 </View>
                 )}
