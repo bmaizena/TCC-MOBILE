@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useApi} from '../../hooks/useApi';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -25,88 +26,30 @@ export default function Home() {
     const navigation = useNavigation();
 
     const toggleMenu = () => setMenuVisible(!menuVisible);
-    
+ 
     // Lista de pontos de ônibus
-    const [busStops, setBusStopList] = useState([
-        {
-            id: 1,
-            latitude: -24.703849,
-            longitude: -48.007183,
-            name: "Ponto 1",
-            description: "Ponto de Ônibus de teste rua sem saída",
-            arrivalPrediction: "3 minutos",
-            departurePrediction: "5 minutos",
-            schedules: ["6:00", "6:30", "7:00", "7:30"],
-            fare: "R$ 14,50"
-        },
-        {
-            id: 2,
-            latitude: -24.702543,
-            longitude: -48.006223,
-            name: "Ponto 2",
-            description: "Ponto de Ônibus de teste pracinha rodoviária",
-            arrivalPrediction: "5 minutos",
-            departurePrediction: "7 minutos",
-            schedules: ["6:15", "6:45", "7:15", "8:45"],
-            fare: "R$ 5,50"
-        },
-        {
-            id: 3,
-            latitude: -24.703250,
-            longitude: -48.005935,
-            name: "Ponto 3",
-            description: "Ponto de Ônibus próximo à entrada da escola",
-            arrivalPrediction: "2 minutos",
-            departurePrediction: "4 minutos",
-            schedules: ["14:05", "19:35", "20:05", "21:35"],
-            fare: "R$ 5,00"
-        },
-        {
-            id: 4,
-            latitude: -24.704568,
-            longitude: -48.006349,
-            name: "Ponto 4",
-            description: "Ponto de Ônibus em frente à pracinha",
-            arrivalPrediction: "3 minutos",
-            departurePrediction: "8 minutos",
-            schedules: ["6:10", "6:35", "8:00", "7:30"],
-            fare: "R$ 4,50"
-        },
-        {
-            id: 5,
-            latitude: -24.703861,
-            longitude: -48.008461,
-            name: "Ponto 5",
-            description: "Ponto de Ônibus ao lado da padaria",
-            arrivalPrediction: "3 minutos",
-            departurePrediction: "7 minutos",
-            schedules: ["16:00", "16:30", "17:00", "7:35"],
-            fare: "R$ 4,00"
-        },
-        {
-            id: 6,
-            latitude: -24.704549,
-            longitude: -48.003767,
-            name: "Ponto 6",
-            description: "Ponto de Ônibus na esquina da farmácia",
-            arrivalPrediction: "12 minutos",
-            departurePrediction: "2 minutos",
-            schedules: ["10:00", "12:30", "14:00", "17:30"],
-            fare: "R$ 3,50"
-        },
-        {
-            id: 7,
-            latitude: -24.704910,
-            longitude: -48.005283,
-            name: "Ponto 7",
-            description: "Ponto de Ônibus em frente ao supermercado",
-            arrivalPrediction: "3 minutos",
-            departurePrediction: "5 minutos",
-            schedules: ["15:00", "16:30", "17:40", "18:30"],
-            fare: "R$ 2,50"
-        }
-    ]);
+    const api = useApi();
     
+    async function getPontos() {
+        const pontos = await api.listAll();
+        console.log(pontos);
+
+        // Convertendo latitude e longitude para números
+        const pontosConvertidos = pontos.map(stop => ({
+            ...stop,
+            latitude: parseFloat(stop.latitude),   // Converte latitude para número
+            longitude: parseFloat(stop.longitude), // Converte longitude para número
+        }));
+        setBusStopList(pontosConvertidos);  // Atualiza a lista com os pontos convertidos
+    }
+    
+    useEffect(() => {
+        getPontos();
+    }, []);
+
+
+    const [busStops, setBusStopList] = useState([]);
+
     useEffect(() => {
         const getLocation = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -304,9 +247,9 @@ export default function Home() {
                                 />
                             </View>
                         )}
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/'}>Página Web</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/'}>Página Web</Link>
 
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/cadastros/cadastro'}>Cadastro</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/cadastros/cadastro'}>Cadastro</Link>
                     </TouchableOpacity>
                 </View>
                 )}
