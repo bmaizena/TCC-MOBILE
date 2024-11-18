@@ -342,7 +342,7 @@ export default function Home() {
             </Animated.View>
         )}
 
-        )}
+       
 
             
             <View className="absolute bottom-0 left-0 right-0 bg-sky-100 flex-row justify-around items-center p-4 shadow-lg ">
