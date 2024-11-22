@@ -224,9 +224,8 @@ export default function Home() {
                             setMenuVisible(false);
                         }}
                     >
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.33:8000/login'}>Login</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.49:8000/login'}>Login</Link>
 
-                        <Link className="text-lg text-blue-500 p-1" href={'https://wa.me/5513991225846'}>Contato</Link>
                         
                         {/* Link para mostrar a lista de pontos de ônibus */}
                         <TouchableOpacity onPress={() => setShowBusStopList(!showBusStopList)} className="text-lg text-blue-500">
@@ -247,9 +246,9 @@ export default function Home() {
                                 />
                             </View>
                         )}
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/'}>Página Web</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.49:8000/'}>Página Web</Link>
 
-                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.1.64:8000/cadastros/cadastro'}>Cadastro</Link>
+                        <Link className="text-lg text-blue-500 p-1" href={'http://192.168.86.49:8000/cadastros/cadastro'}>Cadastro</Link>
                     </TouchableOpacity>
                 </View>
                 )}
@@ -342,7 +341,7 @@ export default function Home() {
             </Animated.View>
         )}
 
-       
+        )}
 
             
             <View className="absolute bottom-0 left-0 right-0 bg-sky-100 flex-row justify-around items-center p-4 shadow-lg ">
